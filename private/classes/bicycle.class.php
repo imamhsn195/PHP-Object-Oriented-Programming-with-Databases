@@ -78,6 +78,16 @@ class Bicycle extends DatabaseObject{
     }
   }
 
+  protected function validate(){
+      $this->errors = [];
+      if(is_blank($this->brand)){
+      $this->errors[] = "Brand can not be empty.";
+      }
+      if(is_blank($this->model)){
+      $this->errors[] = "Model can not be empty.";
+      }
+      return $this->errors;
+  }
 }
 
 ?>

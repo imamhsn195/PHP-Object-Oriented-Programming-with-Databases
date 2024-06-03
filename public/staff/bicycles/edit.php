@@ -1,14 +1,14 @@
 <?php
 
 require_once('../../../private/initialize.php');
-
+required_login();
 if(!isset($_GET['id'])) {
   redirect_to(url_for('/staff/bicycles/index.php'));
 }
 $id = $_GET['id'];
 $bicycle = Bicycle::find_by_id($id);
 if($bicycle == false){
-  $_SESSION['message'] = 'The bicycle was not found.';
+  $session->message('The bicycle was not found.');
   redirect_to(url_for('/staff/bicycles/index.php'));
 }
 
@@ -21,7 +21,7 @@ if(is_post_request()) {
   $result = $bicycle->save();
 
   if($result === true) {
-    $_SESSION['message'] = 'The bicycle was updated successfully.';
+    $session->message('The bicycle was updated successfully.');
     redirect_to(url_for('/staff/bicycles/show.php?id=' . $id));
   } else {
     // show errors

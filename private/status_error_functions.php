@@ -1,5 +1,15 @@
 <?php
 
+function required_login(){
+  Global $session;
+  if(!$session->is_logged_in()){
+    redirect_to(url_for('staff/login.php'));
+  }else{
+    // 
+  }
+}
+
+
 function display_errors($errors=array()) {
   $output = '';
   if(!empty($errors)) {
@@ -24,8 +34,10 @@ function get_and_clear_session_message() {
 }
 
 function display_session_message() {
-  $msg = get_and_clear_session_message();
+  Global $session;
+  $msg = $session->message();
   if(isset($msg) && $msg != '') {
+    $session->clear_message();
     return '<div id="message">' . h($msg) . '</div>';
   }
 }

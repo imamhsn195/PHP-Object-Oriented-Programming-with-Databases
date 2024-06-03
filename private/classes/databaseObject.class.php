@@ -5,11 +5,11 @@
         static protected $database_columns = [];
         public $errors = [];
         
-        public static function set_database($database){
+        static public function set_database($database){
             self::$database = $database;
         }
 
-        public static function find_by_sql($sql){
+        static public function find_by_sql($sql){
             $result = self::$database->query($sql);
             if(!$result){
             exit('Database query failed.');
@@ -27,7 +27,7 @@
         }
 
         public static function find_all(){
-            $sql = "Select * from " . static::$table_name . " ";
+            $sql = "SELECT * FROM " . static::$table_name;
             return static::find_by_sql($sql);
         }
 
@@ -43,23 +43,18 @@
         }
 
         protected static function instentiate($record){
-            $bike = new static;
-            foreach($record as $property => $value){
-            if(property_exists($bike, $property)){
-                $bike->$property = $value;
+                $object = new static;
+                foreach($record as $property => $value){
+                if(property_exists($object, $property)){
+                    $object->$property = $value;
+                }
             }
-            }
-            return $bike;
+            return $object;
         }
 
         protected function validate(){
             $this->errors = [];
-            if(is_blank($this->brand)){
-            $this->errors[] = "Brand can not be empty.";
-            }
-            if(is_blank($this->model)){
-            $this->errors[] = "Model can not be empty.";
-            }
+            
             return $this->errors;
         }
 
@@ -67,7 +62,7 @@
             $this->validate();
             if(!empty($this->errors)){ return false;}
 
-            $sql = "INSERT INTO bicycles (";
+            $sql = "INSERT INTO ". static::$table_name ." (";
             $sql .= join(', ', array_keys(static::sanitized_attributes()));
             $sql .= ") values ('";
             $sql .= join("', '", array_values(static::sanitized_attributes()));
@@ -89,7 +84,7 @@
             $attribute_pairs[] = "{$key}='{$value}'";
             }
 
-            $sql = "UPDATE bicycles SET ";
+            $sql = "UPDATE " . static::$table_name . " SET ";
             $sql .= join(", ", $attribute_pairs);
             $sql .= " WHERE id='". self::$database->escape_string($this->id) ."' ";
             $sql .= "LIMIT 1";
@@ -106,7 +101,7 @@
         }
 
         public function delete(){
-            $sql = "DELETE from bicycles ";
+            $sql = "DELETE from ". static::$table_name ." ";
 
             $sql .= " where id=" . self::$database->escape_string($this->id) . " ";
 

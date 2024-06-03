@@ -1,7 +1,7 @@
 <?php
 
 require_once('../../../private/initialize.php');
-
+required_login();
 if(is_post_request()) {
 
   // Create record using post parameters
@@ -11,7 +11,7 @@ if(is_post_request()) {
   $result = $bicycle->save();
   if($result === true) {
     $new_id = $bicycle->id;
-    $_SESSION['message'] = 'The bicycle was created successfully.';
+    $session->message('The bicycle was created successfully.');
     redirect_to(url_for('/staff/bicycles/show.php?id=' . $new_id));
   } else {
     // show errors

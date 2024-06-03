@@ -1,5 +1,5 @@
 <?php require_once('../../../private/initialize.php'); ?>
-
+<?php required_login(); ?>
 <?php
   
 // Find all bicycles;
