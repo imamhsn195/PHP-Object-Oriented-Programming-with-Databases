@@ -3,7 +3,16 @@
   
 <?php
 // Find all admins;
-$admins = Admin::find_all();
+$current_page = $_GET['page'] ?? 1;
+$per_page = 5;
+$total_count = Admin::count_all();
+$pagination = new Pagination($current_page, $per_page, $total_count);
+
+$sql = "Select * from admins ";
+$sql .= "limit {$pagination->per_page} ";
+$sql .= "offset {$pagination->offset()}";
+$admins = Admin::find_by_sql($sql);
+// $admins = Admin::find_all();
 ?>
 <?php $page_title = 'Admins'; ?>
 <?php include(SHARED_PATH . '/staff_header.php'); ?>
@@ -43,7 +52,10 @@ $admins = Admin::find_all();
   	</table>
 
   </div>
-
+  <?php
+    $url = url_for('staff/admins/index.php');
+    echo $pagination->pagination_links();
+  ?>
 </div>
 
 <?php include(SHARED_PATH . '/staff_footer.php'); ?>
