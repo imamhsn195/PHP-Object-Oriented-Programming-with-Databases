@@ -31,6 +31,13 @@
             return static::find_by_sql($sql);
         }
 
+        public static function count_all(){
+            $sql = "SELECT Count(*) FROM " . static::$table_name;
+            $result = self::$database->query($sql);
+            $row = $result->fetch_array();
+            return array_shift($row);
+        }
+
         public static function find_by_id($id){
             $sql = "SELECT * from " . static::$table_name . " ";
             $sql .= "WHERE id='" . self::$database->escape_string($id) . "'";
